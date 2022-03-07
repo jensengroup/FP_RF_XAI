@@ -20,37 +20,12 @@ from copy import deepcopy
 from scipy.stats import pearsonr
 
 
-def spearman_rank_corr(v1, v2):
-    v1_ranked = ss.rankdata(v1)
-    v2_ranked = ss.rankdata(v2)
-    return pearsonr(v1_ranked, v2_ranked)
-
-
 def mol2fp(mol, radius=2, n_bits=1024):
     bi = {}
     fp = AllChem.GetMorganFingerprintAsBitVect(mol, radius, nBits=n_bits, bitInfo=bi)
     arr = np.zeros((0,))
     DataStructs.ConvertToNumpyArray(fp, arr)
     return arr.astype(int)
-
-
-def alt_rdkit(mol):
-    rad = 2
-    n_atoms = mol.GetNumAtoms()
-    rdkit_contrib, _ = RDkit_normalized_weights(mol)
-    mol = Chem.AddHs(mol)
-    new_list = []
-    for at1 in range(n_atoms):
-        log_contrib = 0
-        env = Chem.FindAtomEnvironmentOfRadiusN(mol, rad, at1)
-        amap={}
-        submol=Chem.PathToSubmol(mol,env,atomMap=amap)
-        for at2 in amap.keys():
-            #print(at2)
-            log_contrib += rdkit_contrib[at2]
-        new_list.append(log_contrib)
-    weights = np.array(new_list)/np.linalg.norm(np.array(new_list))
-    return weights
 
 
 def mod_fp(mol, atom_idx, radius=2, n_bits=1024):
@@ -132,9 +107,6 @@ def ML_normalized_weights(mol, radius=2, n_bits=1024):
     return Normalized_weightsML.flatten(), uncertainty_weights, orig_uq
 
 
-# In[8]:
-
-
 def RDkit_normalized_weights(mol):
     contribs_update = []
     mol = Chem.AddHs(mol)
@@ -155,9 +127,6 @@ def RDkit_normalized_weights(mol):
     contribs_update = np.array(contribs_update)
     Normalized_weightsRDkit = contribs_update.flatten()/np.linalg.norm(contribs_update.flatten())
     return contribs_update, Normalized_weightsRDkit 
-
-
-# In[9]:
 
 
 def RDKit_bit_vector(mol, radius=2, n_bits=1024):
