@@ -107,7 +107,7 @@ def ML_normalized_weights(mol, radius=2, n_bits=1024):
     return Normalized_weightsML.flatten(), uncertainty_weights, orig_uq
 
 
-def RDkit_normalized_weights(mol):
+def RDKit_normalized_weights(mol):
     contribs_update = []
     mol = Chem.AddHs(mol)
     contribs = rdMolDescriptors._CalcCrippenContribs(mol)
@@ -130,7 +130,7 @@ def RDkit_normalized_weights(mol):
 
 
 def RDKit_bit_vector(mol, radius=2, n_bits=1024):
-    rdkit_contrib, _ = RDkit_normalized_weights(mol)
+    rdkit_contrib, _ = RDKit_normalized_weights(mol)
     rdkit_bit_contribs = []
     
     ML_weights = []
@@ -173,7 +173,7 @@ def RDKit_bit_vector(mol, radius=2, n_bits=1024):
                     bit_contrib += rdkit_contrib[at2]
         rdkit_bit_contribs.append(bit_contrib)
     
-    return ML_weights, rdkit_bit_contribs
+    return np.array(ML_weights), np.array(rdkit_contrib), np.array(rdkit_bit_contribs)
 
 
 def uncertainty_vector(mol, radius=2, n_bits=1024):
@@ -224,6 +224,41 @@ def uncertainty_vector(mol, radius=2, n_bits=1024):
     #Normalized_weightsML = weights/np.linalg.norm(weights)
     return np.array(weights).flatten(), np.array(sigmas).flatten()
 
+
+def get_weights_for_visualization(mol, model, radius=2, n_bits=1024):
+
+    ml_weights, atom_weights, FPA_weights = RDKit_bit_vector(mol, radius=radius, n_bits=n_bits)
+    
+    #atom_weights, _ = RDKit_normalized_weights(mol)
+    clogp = Chem.Crippen.MolLogP(mol)
+    fp = mol2fp(mol, radius=2, n_bits=2048)
+    logp_pred = model.predict([fp])[0]
+    #print(clogp, logp_pred)
+    if np.sign(np.sum(ml_weights)) != np.sign(logp_pred):
+        print("ml weights: sign problem detected")
+        #ml_weights = -ml_weights
+    if np.sign(np.sum(FPA_weights)) != np.sign(clogp):
+        print("FPA weights: sign problem detected") 
+    
+    ml_weights = ml_weights*abs(logp_pred/np.sum(ml_weights))
+    FPA_weights = FPA_weights*abs(clogp/np.sum(FPA_weights))
+
+    return ml_weights, atom_weights, FPA_weights
+
+
+def get_contour_image(mol, weights, contour_step=0.06):
+    N_contours = (max(weights)-min(weights))/contour_step
+
+    fig = SimilarityMaps.GetSimilarityMapFromWeights(mol, weights, contourLines=round(N_contours))
+
+    return fig
+
 if __name__ == "__main__":
     model_filename = sys.argv[1]
     m = pickle.load(open(model_filename, 'rb'))
+    smiles = "CC[NH+](CC)[C@@H]1CCN(C(=O)N[C@@H]2CCCC2)C1"
+    mol = Chem.MolFromSmiles(smiles)
+    ml_weights, atom_weights, fpa_weights = get_weights_for_visualization(mol, m, radius=2, n_bits=2048)
+    fig = get_contour_image(mol, ml_weights)
+    fig.savefig("ml_weights_example.pdf", bbox_inches='tight')
+
