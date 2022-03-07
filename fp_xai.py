@@ -129,7 +129,7 @@ def RDKit_normalized_weights(mol):
     return contribs_update, Normalized_weightsRDkit 
 
 
-def RDKit_bit_vector(mol, radius=2, n_bits=1024):
+def RDKit_bit_vector(mol, model, radius=2, n_bits=1024):
     rdkit_contrib, _ = RDKit_normalized_weights(mol)
     rdkit_bit_contribs = []
     
@@ -139,7 +139,7 @@ def RDKit_bit_vector(mol, radius=2, n_bits=1024):
     fps_morgan2 = AllChem.GetMorganFingerprintAsBitVect(mol, radius, n_bits, bitInfo=info)
 
 
-    orig_pp = m.predict(np.array([list(fps_morgan2)]))[0]
+    orig_pp = model.predict(np.array([list(fps_morgan2)]))[0]
   
     # get bits for each atom
   
@@ -227,7 +227,7 @@ def uncertainty_vector(mol, radius=2, n_bits=1024):
 
 def get_weights_for_visualization(mol, model, radius=2, n_bits=1024):
 
-    ml_weights, atom_weights, FPA_weights = RDKit_bit_vector(mol, radius=radius, n_bits=n_bits)
+    ml_weights, atom_weights, FPA_weights = RDKit_bit_vector(mol, model, radius=radius, n_bits=n_bits)
     
     #atom_weights, _ = RDKit_normalized_weights(mol)
     clogp = Chem.Crippen.MolLogP(mol)
