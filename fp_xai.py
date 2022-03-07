@@ -157,7 +157,7 @@ def RDKit_bit_vector(mol, model, radius=2, n_bits=1024):
     # loop over atoms
     for at1 in range(mol.GetNumAtoms()):
         new_fp = fps_morgan2 & bitmap[at1]
-        new_pp = m.predict(np.array([list(new_fp)]))[0]
+        new_pp = model.predict(np.array([list(new_fp)]))[0]
         ML_weights.append(orig_pp-new_pp) 
         removed_bits = []
         for x in fps_morgan2.GetOnBits():
