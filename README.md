@@ -14,6 +14,8 @@ for explainable AI heatmaps"
 
 The 9 different RF models described in the above mentioned paper is available here: [RF_models](https://sid.erda.dk/sharelink/eUVFpTDU62)
 
+Each model has 200 trees, with a minimum sample per leaf node of 3 and ECFP4 with a bit vector length of 2048 as the input features.
+
 They are named "Ntrain_200_3_2048.p" where Ntrain is any of the 9 training set sizes used to train the model: 100, 500, 1000, 5.000, 10.000, 20.000, 50.000, 100.000 or 150.000 
 
 ## Test data
