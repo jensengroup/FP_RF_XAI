@@ -12,7 +12,7 @@ for explainable AI heatmaps"
 
 ## Models
 
-The 9 different RF models described in the above mentioned paper is available here: [RF_models](https://sid.erda.dk/sharelink/EPvv68fOTp)
+The 9 different RF models described in the above mentioned paper is available here: [RF_models](https://sid.erda.dk/sharelink/eUVFpTDU62)
 
 ## Test data
 
