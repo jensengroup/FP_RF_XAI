@@ -61,22 +61,21 @@ def mod_fp_exchange(mol, idx_atom, radius=2, dummy_atom_no=47, n_bits=1024):
     new_fp = AllChem.GetMorganFingerprintAsBitVect(mol_cpy, radius, nBits=n_bits, bitInfo=new_info)
     
     return fp, new_fp, info, new_info
-    
+   
 
-def ML_normalized_weights(mol, radius=2, n_bits=1024): 
-    weights = []
-    uncertainty_weights = []
-  
+def AAU_weights(mol, model, radius=2, n_bits=2048):
+
+    aau_weights = []
+    
     info = {}
     fps_morgan2 = AllChem.GetMorganFingerprintAsBitVect(mol, radius, n_bits, bitInfo=info)
-
+    
     tree_predictions = []
-    for tree in m.estimators_:
+    for tree in model.estimators_:
         tree_predictions.append(tree.predict(np.array([list(fps_morgan2)]))[0])
 
     orig_uq = np.std(np.array(tree_predictions))
-    orig_pp = m.predict(np.array([list(fps_morgan2)]))[0]
-  
+
     # get bits for each atom
   
     bitmap = [~DataStructs.ExplicitBitVect(n_bits) for x in range(mol.GetNumAtoms())]
@@ -93,18 +92,15 @@ def ML_normalized_weights(mol, radius=2, n_bits=1024):
     # loop over atoms
     for at1 in range(mol.GetNumAtoms()):
         new_fp = fps_morgan2 & bitmap[at1]
-        new_pp = m.predict(np.array([list(new_fp)]))[0]
-        weights.append(orig_pp-new_pp)
         tree_predictions = []
-        for tree in m.estimators_:
+        for tree in model.estimators_:
             tree_predictions.append(tree.predict(np.array([list(new_fp)]))[0])
         
-
         new_uq = np.std(np.array(tree_predictions))
-        uncertainty_weights.append(orig_uq-new_uq)
+        aau_weights.append(orig_uq-new_uq)
+
+    return aau_weights
   
-    Normalized_weightsML = weights/np.linalg.norm(weights)
-    return Normalized_weightsML.flatten(), uncertainty_weights, orig_uq
 
 
 def RDKit_normalized_weights(mol):
@@ -176,11 +172,9 @@ def RDKit_bit_vector(mol, model, radius=2, n_bits=1024):
     return np.array(ML_weights), np.array(rdkit_contrib), np.array(rdkit_bit_contribs)
 
 
-def uncertainty_vector(mol, radius=2, n_bits=1024):
+def UAA_weights(mol, m, radius=2, n_bits=1024):
 
-    
-    weights = []
-    sigmas = []
+    uaa_weights = []
   
     info = {}
     fps_morgan2 = AllChem.GetMorganFingerprintAsBitVect(mol, radius, n_bits, bitInfo=info)
@@ -212,17 +206,13 @@ def uncertainty_vector(mol, radius=2, n_bits=1024):
             tree_predictions.append(tree.predict(np.array([list(new_fp)])))
 
         weight_trees = np.array(tree_predictions_og)-np.array(tree_predictions)
-        median_weight = np.median(weight_trees)
         sigma_weight = np.std(weight_trees)
-        #UQ_new = np.std(np.array(tree_predictions), axis=0)
-        #new_pp = m.predict(np.array([list(new_fp)]))[0]
-        #weights.append(UQ-UQ_new) 
-        weights.append(median_weight)
-        sigmas.append(sigma_weight)
+
+        uaa_weights.append(sigma_weight)
         
 
     #Normalized_weightsML = weights/np.linalg.norm(weights)
-    return np.array(weights).flatten(), np.array(sigmas).flatten()
+    return np.array(uaa_weights).flatten()
 
 
 def get_weights_for_visualization(mol, model, radius=2, n_bits=1024):
