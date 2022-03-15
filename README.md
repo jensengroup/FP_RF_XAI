@@ -8,7 +8,7 @@
 The data and code made available here is described in:
 
 * Maria H. Rasmussen, Diana S. Christensen and Jan H. Jensen. "Do machines dream of atoms? A quantitative molecular benchmark
-for explainable AI heatmaps"
+for explainable AI heatmaps", *ChemRxiv* (Mar. 2022)
 
 ## Models
 
