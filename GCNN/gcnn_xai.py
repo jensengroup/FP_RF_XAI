@@ -16,6 +16,7 @@ from torch_scatter import scatter_add
 from torch_geometric.utils import add_self_loops, degree
 from torch_geometric.data import Data
 
+import pytorch_lightning as pl
 
 import pandas as pd
 import numpy as np
