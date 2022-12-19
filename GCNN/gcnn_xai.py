@@ -6,13 +6,7 @@ import kora.install.rdkit
 
 import torch_geometric
 from torch_geometric.loader import DataLoader
-# PyTorch Lightning
-try:
-    import pytorch_lightning as pl
-except ModuleNotFoundError: # Google Colab does not have PyTorch Lightning installed by default. Hence, we do it here if necessary
-    !pip install --quiet pytorch-lightning>=1.4
-    import pytorch_lightning as pl
-#from torch_geometric.data.dataloader import DataLoader
+import pytorch_lightning as pl
 
 import torch_geometric.nn as geom_nn
 
