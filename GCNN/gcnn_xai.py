@@ -19,9 +19,6 @@ from torch_geometric.data import Data
 
 import pandas as pd
 import numpy as np
-from rdkit import Chem
-from rdkit.Chem import Descriptors
-from rdkit.Chem.rdmolops import GetAdjacencyMatrix
 
 
 class GNNModel(nn.Module):
