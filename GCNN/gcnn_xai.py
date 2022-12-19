@@ -20,6 +20,10 @@ import pandas as pd
 import numpy as np
 
 
+from rdkit import Chem
+from rdkit.Chem import Descriptors
+from rdkit.Chem.rdmolops import GetAdjacencyMatrix
+
 class GNNModel(nn.Module):
 
     def __init__(self, c_in, c_hidden, c_out, num_layers=2, layer_name="GCN", dp_rate=0.1, **kwargs):
