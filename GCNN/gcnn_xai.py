@@ -1,28 +1,7 @@
 
 # For CUDA 11.3
-!pip install torch==1.11.0+cu113 torchvision==0.12.0+cu113 torchtext==0.12.0 torchaudio==0.11.0+cu113 -f https://download.pytorch.org/whl/cu113/torch_stable.html
 import torch
 
-def format_pytorch_version(version):
-  return version.split('+')[0]
-
-TORCH_version = torch.__version__
-
-TORCH = format_pytorch_version(TORCH_version)
-
-def format_cuda_version(version):
-  return 'cu' + version.replace('.', '')
-
-CUDA_version = torch.version.cuda
-CUDA = format_cuda_version(CUDA_version)
-
-!pip install torch-scatter     -f https://pytorch-geometric.com/whl/torch-{TORCH}+{CUDA}.html
-!pip install torch-sparse      -f https://pytorch-geometric.com/whl/torch-{TORCH}+{CUDA}.html
-!pip install torch-cluster     -f https://pytorch-geometric.com/whl/torch-{TORCH}+{CUDA}.html
-!pip install torch-spline-conv -f https://pytorch-geometric.com/whl/torch-{TORCH}+{CUDA}.html
-!pip install torch-geometric==2.0.4
-
-!pip install kora
 import kora.install.rdkit
 
 import torch_geometric
