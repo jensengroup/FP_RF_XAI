@@ -8,7 +8,7 @@
 The data and code made available here is described in:
 
 * Maria H. Rasmussen, Diana S. Christensen and Jan H. Jensen. "Do machines dream of atoms? A quantitative molecular benchmark
-for explainable AI heatmaps"
+for explainable AI heatmaps", *ChemRxiv* (Mar. 2022)
 
 ## Models
 
@@ -33,3 +33,7 @@ Likewise, the overlap between the ML atomic attribution vector and the atomic at
 Lastly, the overlap between the ML atomic attribution vector and the fingerprint adjusted (FPA) attribution vector from the Crippe logP value is given for each model, named as: overlap_fpa_Ntrain 
 
 The test data is the last 5000 entries of ZINC_250k.smi
+
+## Visualizing atomic contributions
+
+example_notebook.ipynb contains examples of how to create contour plots like those found in the paper above
