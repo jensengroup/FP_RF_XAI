@@ -2,8 +2,6 @@
 # For CUDA 11.3
 import torch
 
-import kora.install.rdkit
-
 import torch_geometric
 from torch_geometric.loader import DataLoader
 import pytorch_lightning as pl
