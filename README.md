@@ -1,6 +1,5 @@
 # Do machines dream of atoms?
 
-
 <a href="https://colab.research.google.com/drive/1dVsmJlGqaHykemUCLh--lfoppsbNv_I9?usp=sharing">
   <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/>
 </a>
@@ -19,6 +18,15 @@ Each model has 200 trees, with a minimum sample per leaf node of 3 and ECFP4 wit
 They are named "Ntrain_200_3_2048.p" where Ntrain is any of the 9 training set sizes used to train the model: 100, 500, 1000, 5.000, 10.000, 20.000, 50.000, 100.000 or 150.000 
 
 The training data for each model is the first Ntrain entries of ZINC_250k.smi
+
+### XAI for GCNN models
+
+The following colab link demonstrates how the atomic contributions to the predicted logP are obtained for the GCNN model and can be 
+compared to the "gound truth" Crippen logP atomic contributions. 
+
+<a href="https://colab.research.google.com/drive/1TESS_H8PkWgzjNrBvTRQoHCte4S1nHoP?usp=sharing">
+  <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/>
+</a>
 
 ## Test data
 
